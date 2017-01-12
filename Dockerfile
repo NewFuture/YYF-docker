@@ -6,13 +6,14 @@ LABEL Name="YYF-docker" Description="mimimal docker image for YYF"
 # Environments
 ENV PORT=80 \
 	TIMEZONE=UTC \
-	MAX_UPLOAD=50M 
+	MAX_UPLOAD=50M \
+	WORK_DIR=/yyf
 
 # instal PHP
 RUN	PHP_INI='/etc/php5/php.ini' \
 	&& PHP_CONF='/etc/php5/conf.d' \
 	&& apk add --no-cache \
-	# instal redis and mysql memcached
+	# install redis and mysql memcached
 		redis \
 		mariadb \
 		memcached \
@@ -26,8 +27,8 @@ RUN	PHP_INI='/etc/php5/php.ini' \
 		/usr/share/man/* \
 		/usr/include/*
 
-WORKDIR /yyf/
+WORKDIR $WORK_DIR
 
-EXPOSE $PORT
+COPY ./run.sh /run.sh
 
-CMD php -S 0.0.0.0:$PORT $([ ! -f index.php ]&&[ -d public ]&&echo '-t public')
+CMD /run.sh
