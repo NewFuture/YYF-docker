@@ -12,9 +12,10 @@ ENV PORT=80 \
 RUN	PHP_INI='/etc/php5/php.ini' \
 	&& PHP_CONF='/etc/php5/conf.d' \
 	&& apk add --no-cache \
-	# instal redis and mysql
+	# instal redis and mysql memcached
 		redis \
 		mariadb \
+		memcached \
 	# ClEAN
 	&& rm -rf /var/cache/apk/* \
 		/var/tmp/* \
