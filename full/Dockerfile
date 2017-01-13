@@ -1,7 +1,7 @@
 FROM newfuture/yaf:latest
 MAINTAINER New Future <docker@newfuture.cc>
 
-LABEL Name="YYF-docker" Description="mimimal docker image for YYF"
+LABEL Name="YYF-docker" Description="docker image for YYF"
 
 # Environments
 ENV PORT=80 \
@@ -11,9 +11,10 @@ ENV PORT=80 \
 
 # instal PHP
 RUN apk add --no-cache redis memcached 
-RUN apk add --no-cache mariadb
+RUN apk sqlite
+RUN apk add --no-cache mariadb mariadb-client
 
-	# ClEAN
+# ClEAN
 RUN rm -rf /var/cache/apk/* \
 	/var/tmp/* \
 	/tmp/* \
