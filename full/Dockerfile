@@ -10,8 +10,8 @@ ENV PORT=80 \
 	WORK_DIR=/yyf
 
 # instal PHP
-RUN apk add --no-cache redis memcached \
-RUN apk add  ariadb \
+RUN apk add --no-cache redis memcached 
+RUN apk add --no-cache mariadb
 
 	# ClEAN
 RUN rm -rf /var/cache/apk/* \
