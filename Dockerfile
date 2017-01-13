@@ -10,9 +10,7 @@ ENV PORT=80 \
 	WORK_DIR=/yyf
 
 # instal PHP
-RUN	PHP_INI='/etc/php5/php.ini' \
-	&& PHP_CONF='/etc/php5/conf.d' \
-	&& apk add --no-cache \
+RUN apk add --no-cache \
 	# install redis and mysql memcached
 		redis \
 		mariadb \

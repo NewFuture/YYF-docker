@@ -27,6 +27,7 @@ if [ -f '$WORK_DIR/tests/yyf.sql' ];then
     sed '/^\/\*MYSQL/d;/MYSQL\*\//d' tests/yyf.sql >> "$tempSqlFile";
     # sed '/^\/\*SQLITE/d;/SQLITE\*\//d' tests/yyf.sql | sqlite3 runtime/yyf.db;
 fi;
+mysqld_safe --skip-grant-tables --skip-networking &
 mysqld -u mysql --datadir "$MYSQL_DIR" --init-file="$tempSqlFile" &
 
 # run init script in tests
@@ -47,5 +48,5 @@ done;
 
 # run
 php -S 0.0.0.0:$PORT  $([ -d $WEB_ROOT ]&&echo "-t $WEB_ROOT") &
-
+echo php server start
 # exec "$@"
