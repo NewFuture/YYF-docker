@@ -10,8 +10,8 @@ ENV PORT=80 \
 	WORK_DIR=/yyf
 
 # instal PHP
-RUN apk add --no-cache redis memcached 
-RUN apk sqlite
+RUN apk add --no-cache --update redis memcached 
+RUN apk add --no-cache sqlite
 RUN apk add --no-cache mariadb mariadb-client
 
 # ClEAN
