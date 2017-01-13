@@ -16,11 +16,11 @@ memcached -u memcached &
 
 #init and start mysql
 [ -d "/run/mysqld" ] || mkdir -p /run/mysqld;
-chown -R mysql:mysql "$WORK_DIR" /run/mysqld;
+[ -d "$MYSQL_DIR" ] || mkdir -p $MYSQL_DIR;
+chown -R mysql:mysql "$MYSQL_DIR" /run/mysqld; 
 if [ -f "$MYSQL_DIR/mysql-bin.index" ];then
     mysqld -u mysql --datadir "$MYSQL_DIR" &
-else
-    [ -d "$MYSQL_DIR" ] || mkdir -p $MYSQL_DIR;
+else   
     mysql_install_db --user=mysql --skip-name-resolve --datadir="$MYSQL_DIR";
     echo -e "DELETE FROM mysql.user;\nFLUSH PRIVILEGES;">"$tempSqlFile";
     if [ $MYSQL_PASSWORD ];then
