@@ -47,6 +47,4 @@ for file in tests/*.sh; do
 done;
 
 # run
-php -S 0.0.0.0:$PORT  $([ -d $WEB_ROOT ]&&echo "-t $WEB_ROOT") &
-echo php server start
-# exec "$@"
+php -S 0.0.0.0:$PORT  $([ -d $WEB_ROOT ]&&echo "-t $WEB_ROOT")
