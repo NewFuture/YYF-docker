@@ -41,12 +41,11 @@ else
         echo "CREATE USER '$MYSQL_ACCOUNT'@'%';">>"$tempSqlFile";
     #MYSQL_初始化脚本
     fi;
-    #SQLite数据库存放位置
     #MYSQL 账号
     echo -e "GRANT ALL ON *.* TO '$MYSQL_ACCOUNT'@'%';\nFLUSH PRIVILEGES;">>"$tempSqlFile";
     #MYSQL_初始化脚本
     [ -f "${WORK_DIR}tests/yyf.sql" ]&& sed '/^\/\*MYSQL/d;/MYSQL\*\//d' "${WORK_DIR}tests/yyf.sql" >> "$tempSqlFile";
-    #SQLite数据库存放位置
+    #MYSQL脚本
     [ -f $MYSQL_SCRIPT ]&& cat "$MYSQL_SCRIPT">>"$tempSqlFile";
     mysqld -u mysql --datadir "$MYSQL_DIR" --init-file="$tempSqlFile" &
 fi;

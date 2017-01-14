@@ -5,9 +5,10 @@ set -e
 WORK_DIR=${WORK_DIR:-'/yyf/'}
 MYSQL_DIR=${MYSQL_DIR:-"${WORK_DIR}runtime/mysql"}
 MYSQL_USER=${MYSQL_USER:-'root'}
-WEB_ROOT=${WEB_ROOT:-"${WORK_DIR}public"}
 MYSQL_SCRIPT=${MYSQL_SCRIPT:-"${WORK_DIR}tests/mysql.sql"}
+SQLITE_FILE=${SQLITE_FILE:-"${WORK_DIR}runtime/yyf.db"}
 
+WEB_ROOT=${WEB_ROOT:-"${WORK_DIR}public"}
 tempSqlFile='/tmp/mysql-init.sql'
 
 # start redis
@@ -35,7 +36,14 @@ else
     mysqld -u mysql --datadir "$MYSQL_DIR" --init-file="$tempSqlFile" &
 fi;
 
-# sed '/^\/\*SQLITE/d;/SQLITE\*\//d' tests/yyf.sql | sqlite3 runtime/yyf.db;
+# init SQLITE
+if [ -f "$SQLITE_FILE" ];then #文件不存在在自动初始化
+    if [ $SQLITE_SCRIPT ]; then
+        cat "$SQLITE_SCRIPT" | sqlite3 $SQLITE_FILE;
+    elif [ -f "${WORK_DIR}tests/yyf.sql" ]; then
+        sed '/^\/\*SQLITE/d;/SQLITE\*\//d' "${WORK_DIR}tests/yyf.sql" | sqlite3 $SQLITE_FILE;
+    fi
+fi;
 
 # run init script in tests
 for file in tests/init.* ;do

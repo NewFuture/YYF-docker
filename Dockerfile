@@ -14,7 +14,7 @@ RUN apk add --no-cache redis memcached
 RUN apk add --no-cache sqlite
 RUN apk add --no-cache mariadb
 
-	# ClEAN
+# ClEAN
 RUN rm -rf /var/cache/apk/* \
 	/var/tmp/* \
 	/tmp/* \
