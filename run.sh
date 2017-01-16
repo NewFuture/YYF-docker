@@ -18,30 +18,25 @@ memcached -u memcached &
 #init and start mysql
 [ -d "/run/mysqld" ] || mkdir -p /run/mysqld;
 [ -d "$MYSQL_DIR" ] || mkdir -p $MYSQL_DIR;
-chown -R mysql:mysql "$MYSQL_DIR" /run/mysqld; 
-if [ -f "$MYSQL_DIR/mysql-bin.index" ];then
-    mysqld -u mysql --datadir "$MYSQL_DIR" &
-else   
+chown -R mysql:mysql "$MYSQL_DIR" /run/mysqld;
+if ! [ -f "$MYSQL_DIR/mysql-bin.index" ] ;then
     mysql_install_db --user=mysql --skip-name-resolve --datadir="$MYSQL_DIR";
-    echo -e "DELETE FROM mysql.user;\nFLUSH PRIVILEGES;">"$tempSqlFile";
-    if [ $MYSQL_PASSWORD ];then
-        echo "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';">>"$tempSqlFile";
-    else
-        mysqld_safe --skip-grant-tables --skip-networking &
-        echo "CREATE USER '$MYSQL_USER'@'%';">>"$tempSqlFile";
-    fi;
-    echo -e "GRANT ALL ON *.* TO '$MYSQL_USER'@'%';\nFLUSH PRIVILEGES;">>"$tempSqlFile";
-    [ -f "${WORK_DIR}tests/yyf.sql" ]&& sed '/^\/\*MYSQL/d;/MYSQL\*\//d' "${WORK_DIR}tests/yyf.sql" >> "$tempSqlFile";
-    [ -f $MYSQL_SCRIPT ]&& cat "$MYSQL_SCRIPT">>"$tempSqlFile";
-    mysqld -u mysql --datadir "$MYSQL_DIR" --init-file="$tempSqlFile" &
+fi
+echo -e "DELETE FROM mysql.user;\nFLUSH PRIVILEGES;">"$tempSqlFile";
+if [ $MYSQL_PASSWORD ];then
+    echo "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';">>"$tempSqlFile";
+else
+    echo "CREATE USER '$MYSQL_USER'@'%';">>"$tempSqlFile";
 fi;
+echo -e "GRANT ALL ON *.* TO '$MYSQL_USER'@'%';\nFLUSH PRIVILEGES;">>"$tempSqlFile";
+mysqld -u mysql --datadir "$MYSQL_DIR" --init-file="$tempSqlFile" &
 
 # init SQLITE
 if [ -f "$SQLITE_FILE" ];then #文件不存在在自动初始化
     if [ $SQLITE_SCRIPT ]; then
         cat "$SQLITE_SCRIPT" | sqlite3 $SQLITE_FILE;
-    elif [ -f "${WORK_DIR}tests/yyf.sql" ]; then
-        sed '/^\/\*SQLITE/d;/SQLITE\*\//d' "${WORK_DIR}tests/yyf.sql" | sqlite3 $SQLITE_FILE;
+    elif [ -f "$DEMO_SQL" ]; then
+        sed '/^\/\*SQLITE/d;/SQLITE\*\//d' "$DEMO_SQL" | sqlite3 $SQLITE_FILE;
     fi
 fi;
 
