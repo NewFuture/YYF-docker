@@ -9,7 +9,7 @@ ENV PORT=80 \
 	WORK_DIR=/yyf/
 
 #dev environment
-RUN echo "yaf.environ=dev">"/etc/php*/conf.d/*yaf.ini" \
+RUN echo "yaf.environ=dev">"$(ls /etc/php*/conf.d/*yaf.ini)" \
 	&& CHANGE_INI(){ \
 		if [ $(cat "$1" | grep -c "^\s*$2") -eq 0 ] ; \
 		then echo "$2=$3" >> "$1"; \
