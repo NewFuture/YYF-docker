@@ -8,6 +8,21 @@ ENV PORT=80 \
 	MAX_UPLOAD=50M \
 	WORK_DIR=/yyf/
 
+#dev environment
+RUN echo "yaf.environ=dev">"/etc/php*/conf.d/*.yaf.ini" \
+	&& CHANGE_INI(){ \
+	if [ $(cat "$1" | grep -c "^\s*$2") -eq 0 ] ; then \
+		echo "$2=$3" >> "$1"; \
+	else \ 
+		sed -i.bak -e "s/^\s*$2.*$/$2=$3/" "$1";\
+	fi;	}\
+	&& PHP_INI=$(php --ini|grep -oPm1  "/.*php\.ini$") \
+	&& CHANGE_INI $PHP_INI display_errors 1 \
+	&& CHANGE_INI $PHP_INI display_startup_errors 1 \
+	&& CHANGE_INI $PHP_INI log_errors 1 \
+	&& CHANGE_INI $PHP_INI assert.active 1 \
+	&& CHANGE_INI $PHP_INI zend.assertions 1
+
 # instal
 RUN apk add --update
 RUN apk add --no-cache redis memcached
