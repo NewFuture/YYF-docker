@@ -9,10 +9,10 @@ ENV PORT=80 \
 	WORK_DIR=/yyf/
 
 # instal
-RUN apk add --update
-RUN apk add --no-cache redis memcached
-RUN apk add --no-cache sqlite
-RUN apk add --no-cache mariadb
+RUN apk add --update\
+	redis \
+	memcached \
+	mariadb
 
 # ClEAN
 RUN rm -rf /var/cache/apk/* \
@@ -25,7 +25,6 @@ RUN rm -rf /var/cache/apk/* \
 	/usr/include/*
 
 WORKDIR $WORK_DIR
-
 
 COPY ./run.sh /run.sh
 
